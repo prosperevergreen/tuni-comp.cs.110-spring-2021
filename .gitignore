@@ -1,2 +1,3 @@
 # ignore all the files ending with .pro.user in sequel
 *.pro.user
+*build-*
