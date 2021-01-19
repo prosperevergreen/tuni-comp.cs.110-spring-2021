@@ -1,4 +1,4 @@
-# ignore all the files ending with .pro.user in sequel
 *.pro.user
-*.pro.user.*
 *build-*
+*.o
+.DS_Store
