@@ -9,9 +9,17 @@ int main()
 
     while (count >= guess)
     {
-        if (guess % 3 == 0)
+        if (guess % 3 == 0 && guess % 7 == 0)
+        {
+            std::cout << "zip boing" << std::endl;
+        }
+        else if (guess % 3 == 0)
         {
             std::cout << "zip" << std::endl;
+        }
+        else if (guess % 7 == 0)
+        {
+            std::cout << "boing" << std::endl;
         }
         else
         {
