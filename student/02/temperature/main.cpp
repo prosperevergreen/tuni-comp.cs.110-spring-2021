@@ -16,7 +16,7 @@ int main()
     celsius = (temperature - 32)/1.8;
 
     cout << temperature << " degrees Celsius is " << fahrenheit <<" degrees Fahrenheit" << endl;
-    cout << temperature << " degrees in Fahrenheit is " << celsius <<" degrees Celsius" << endl;
+    cout << temperature << " degrees Fahrenheit is " << celsius <<" degrees Celsius" << endl;
 
     return 0;
 }
