@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-    int max_int = INT_MAX, number = 0, cube = 0;
+    int max_int_cube = 1290, number = 0, cube = 0;
 
     cout << "Enter a number: ";
     cin >> number;
@@ -14,7 +14,7 @@ int main()
     } else {
         cube = number * number * number;
 
-        if (number > 1290) {
+        if (number > max_int_cube) {
             cout << "Error! The cube of " << number << " is not " << cube << "." << endl;
         } else {
             cout << "The cube of " << number << " is " << cube << "." << endl;
