@@ -13,16 +13,22 @@ int main()
     if (number <= 0) {
         cout << "Only positive numbers accepted" << endl;
     } else {
+
         // Iterate till maximum posible value
         for (int i = 1; i <= number / 2; i++) {
+
             // Check if number is divisible by i
             if (number % i == 0) {
+
                 temp_factor = number / i;
                 temp_min = temp_factor - i;
+
                 if (abs(temp_min) < min) {
+
                     min = temp_min;
                     factor1 = i;
                     factor2 = temp_factor;
+
                 }
             }
         }
