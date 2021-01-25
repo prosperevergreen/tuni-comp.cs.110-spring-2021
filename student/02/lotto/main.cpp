@@ -30,7 +30,7 @@ int main()
 
     if (total_num * drawn_num < 0) {
         cout << "The number of balls must be a positive number." << endl;
-    } else if (drawn_num >= total_num) {
+    } else if (drawn_num > total_num) {
         cout << "The maximum number of drawn balls is the total amount of balls." << endl;
     } else {
         cout << "The probability of guessing all " << drawn_num << " balls correctly is 1/" << calculate_lottery(total_num, drawn_num) << endl;
