@@ -21,7 +21,7 @@ void produce_random_numbers(unsigned int lower, unsigned int upper)
         if(option == 'c'){
             cout << "Your drawn random number is " << distr(gen) << endl;
         }
-        cout << "Press c to continue or q to quit: " << endl;
+        cout << "Press c to continue or q to quit: ";
         cin >> option;
     }
 
