@@ -17,11 +17,11 @@ void produce_random_numbers(unsigned int lower, unsigned int upper)
 
 
     while (option != 'q') {
-
+        cout << endl;
         if(option == 'c'){
             cout << "Your drawn random number is " << distr(gen) << endl;
         }
-        cout << "Press c to continue or q to quit: ";
+        cout <<"Press c to continue or q to quit: ";
         cin >> option;
     }
 
