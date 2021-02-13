@@ -19,6 +19,11 @@ std::vector<std::string> split(const std::string str, char separator, const bool
             temp += str[i];
         }
     }
+
+    if (!ignoreEmpty || (temp != "" and ignoreEmpty)) {
+        result.push_back(temp);
+    }
+
     return result;
 }
 
