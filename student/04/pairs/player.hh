@@ -38,6 +38,9 @@ public:
     // removes it from the game board.
     void add_card(Card& card);
 
+    // Increase the pair by one when there is a match
+    void increase_pairs();
+
     // Prints the game status of the player: name and collected pairs so far.
     void print() const;
 

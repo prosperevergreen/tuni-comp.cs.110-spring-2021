@@ -34,3 +34,7 @@ void Player::print() const
 }
 
 void Player::add_card(Card&) { }
+
+void Player::increase_pairs(){
+    pairs_++;
+}

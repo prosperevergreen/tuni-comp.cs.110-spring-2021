@@ -56,7 +56,7 @@ using Game_row_type = vector<Card>;
 using Player_type = vector<Player>;
 using Game_board_type = vector<vector<Card>>;
 
-struct Coordinate{
+struct Coordinate {
     unsigned int x;
     unsigned int y;
 };
@@ -348,36 +348,38 @@ bool is_gameover(Game_board_type& g_board, const Player_type& players)
     return number_of_pairs == current_pairs;
 }
 
-Card& get_card(Game_board_type& g_board,const Coordinate card_coord){
-    Card& card = g_board.at(card_coord.y - 1).at(card_coord.x - 1);
-    return card;
-}
-
 void turn_cards(Game_board_type& g_board, vector<Coordinate>& cards_coord)
 {
     for (Coordinate card_coord : cards_coord) {
-        get_card(g_board, card_coord).turn();
+        g_board.at(card_coord.y - 1).at(card_coord.x - 1).turn();
     }
 }
 
-void set_card_match(Game_board_type& g_board, vector<Coordinate>& cards_coord)
+bool is_card_match(Game_board_type& g_board, vector<Coordinate>& cards_coord)
 {
-    Card& card_1 = get_card(g_board, cards_coord.at(0));
-    Card& card_2 = get_card(g_board, cards_coord.at(1));
+    Card& card_1 = g_board.at(cards_coord.at(0).y - 1).at(cards_coord.at(0).x - 1);
+    Card& card_2 = g_board.at(cards_coord.at(1).y - 1).at(cards_coord.at(1).x - 1);
 
-    if(card_1.get_letter() == card_2.get_letter()){
+    if (card_1.get_letter() == card_2.get_letter()) {
         cout << FOUND << endl;
         card_1.set_visibility(EMPTY);
         card_2.set_visibility(EMPTY);
-    }else{
+        return true;
+    } else {
         cout << NOT_FOUND << endl;
         turn_cards(g_board, cards_coord);
+        return false;
     }
 }
 
+void print_player_pairs(const Player_type& players)
+{
+    for (Player_type::size_type index = 0; index < players.size(); ++index) {
+        players.at(index).print();
+    }
+}
 
-
-void run_game(Game_board_type& g_board, const Player_type& players)
+void run_game(Game_board_type& g_board, Player_type& players)
 {
     bool quit_now = false;
     unsigned int play_counter = 0;
@@ -390,16 +392,18 @@ void run_game(Game_board_type& g_board, const Player_type& players)
         if (user_choice.size() == 1 and user_choice.at(0) == FORCE_QUIT_INT) {
             cout << GIVING_UP << endl;
             quit_now = true;
-        }else{
+        } else {
             vector<Coordinate> picked_cards_coords;
-            for (vector<unsigned int>::size_type index = 0; index < user_choice.size(); index+=2) {
-                Coordinate card_coords = {user_choice.at(index), user_choice.at(index + 1)};
+            for (vector<unsigned int>::size_type index = 0; index < user_choice.size(); index += 2) {
+                Coordinate card_coords = { user_choice.at(index), user_choice.at(index + 1) };
                 picked_cards_coords.push_back(card_coords);
             }
             turn_cards(g_board, picked_cards_coords);
             print(g_board);
-            set_card_match(g_board, picked_cards_coords);
-
+            if (is_card_match(g_board, picked_cards_coords)) {
+                players.at(turn).increase_pairs();
+            }
+            print_player_pairs(players);
         }
         play_counter++;
     }
