@@ -230,6 +230,106 @@ void init_players(Player_type& players)
     }
 }
 
+bool coords_in_range(unsigned int value, unsigned int max)
+{
+
+    if (value < MIN_COORDNATE) {
+        return false;
+    }
+
+    if (value > max) {
+        return false;
+    }
+
+    return true;
+}
+
+bool is_card_available(const Game_board_type& g_board, unsigned int x, unsigned int y)
+{
+    return g_board.at(y - 1).at(x - 1).get_visibility() != EMPTY;
+}
+
+bool is_coordinate_valid(const Game_board_type& g_board, vector<unsigned int>& card_coords)
+{
+    // Finding out the number of rows and columns of the game board
+    unsigned int rows = g_board.size();
+    unsigned int columns = g_board.at(0).size();
+
+    // Checks if coordinates are in range
+    for (unsigned int coord_index = 0; coord_index < VALID_COORDNATE_SIZE; coord_index++) {
+
+        if (coord_index % 2 == 0) {
+            // Checks if x coordinate is in range
+            if (!coords_in_range(card_coords.at(coord_index), columns)) {
+                return false;
+            }
+        } else {
+            // Checks if y coordinate is in range
+            if (!coords_in_range(card_coords.at(coord_index), rows)) {
+                return false;
+            }
+        }
+    }
+
+    // Check if card 1 == card 2
+    if (card_coords.at(0) == card_coords.at(2) and card_coords.at(1) == card_coords.at(3)) {
+        return false;
+    }
+
+    // Checks if card 1 is empty
+    if (!is_card_available(g_board, card_coords.at(0), card_coords.at(1))) {
+        return false;
+    }
+
+    cout << "At card 1 check" << endl;
+
+    // Checks if card 2 is empty
+    if (!is_card_available(g_board, card_coords.at(2), card_coords.at(3))) {
+        return false;
+    }
+
+    cout << "At card 2 check" << endl;
+
+    return true;
+}
+
+vector<unsigned int> get_player_choice(const Game_board_type& g_board, const Player& player)
+{
+
+    bool valid_input = false;
+    vector<unsigned int> user_choice;
+
+    while (!valid_input) {
+        user_choice = {};
+        cout << player.get_name() << ": " << INPUT_CARDS;
+        string first_input;
+        cin >> first_input;
+
+        // Checks if first input is "q" to quit game
+        if (first_input == FORCE_QUIT) {
+            valid_input = true;
+            user_choice.push_back(FORCE_QUIT_INT);
+        } else { // Validate input ass coordinate to available cards
+            vector<unsigned int> temp_card_coords;
+            temp_card_coords.push_back(stoi_with_check(first_input));
+            for (unsigned int num = 1; num < VALID_COORDNATE_SIZE; num++) {
+                string coordinate_input = "";
+                cin >> coordinate_input;
+                temp_card_coords.push_back(stoi_with_check(coordinate_input));
+            }
+
+            if (is_coordinate_valid(g_board, temp_card_coords)) {
+                user_choice = temp_card_coords;
+                valid_input = true;
+            } else {
+                cout << INVALID_CARD << endl;
+            }
+        }
+    }
+
+    return user_choice;
+}
+
 bool is_gameover(Game_board_type& g_board, const Player_type& players)
 {
 
@@ -240,14 +340,29 @@ bool is_gameover(Game_board_type& g_board, const Player_type& players)
     unsigned int number_of_pairs = (rows * columns) / 2;
 
     unsigned int current_pairs = 0;
-    for (Player player : players) {
-        current_pairs += player.number_of_pairs();
+    for (Player_type::size_type index = 0; index < players.size(); ++index) {
+        current_pairs += players.at(index).number_of_pairs();
     }
 
     return number_of_pairs == current_pairs;
 }
 
+void run_game(Game_board_type& g_board, const Player_type& players)
+{
+    bool quit_now = false;
+    unsigned int play_counter = 0;
+    unsigned int turn = 0;
+    while (!is_gameover(g_board, players) and !quit_now) {
+        print(g_board);
+        turn = play_counter % players.size();
 
+        vector<unsigned int> user_choice = get_player_choice(g_board, players.at(turn));
+        if(user_choice.size() == 1 and user_choice.at(0) == FORCE_QUIT_INT){
+            return;
+        }
+        play_counter++;
+    }
+}
 
 int main()
 {
@@ -267,6 +382,7 @@ int main()
 
     // More code
     init_players(players);
+    run_game(game_board, players);
 
     return EXIT_SUCCESS;
 }
