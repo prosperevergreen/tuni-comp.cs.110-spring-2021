@@ -384,7 +384,8 @@ void run_game(Game_board_type& g_board, Player_type& players)
     bool quit_now = false;
     unsigned int play_counter = 0;
     unsigned int turn = 0;
-    while (!is_gameover(g_board, players) and !quit_now) {
+    bool game_over = false;
+    while (!game_over and !quit_now) {
         print(g_board);
         turn = play_counter % players.size();
 
@@ -406,7 +407,11 @@ void run_game(Game_board_type& g_board, Player_type& players)
             print_player_pairs(players);
         }
         play_counter++;
+        game_over = is_gameover(g_board, players);
     }
+
+//    if(is_gameover())
+    print(g_board);
 }
 
 int main()
