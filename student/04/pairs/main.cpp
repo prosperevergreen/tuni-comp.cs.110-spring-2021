@@ -286,14 +286,10 @@ bool is_coordinate_valid(const Game_board_type& g_board, vector<unsigned int>& c
         return false;
     }
 
-    cout << "At card 1 check" << endl;
-
     // Checks if card 2 is empty
     if (!is_card_available(g_board, card_coords.at(2), card_coords.at(3))) {
         return false;
     }
-
-    cout << "At card 2 check" << endl;
 
     return true;
 }
@@ -352,12 +348,34 @@ bool is_gameover(Game_board_type& g_board, const Player_type& players)
     return number_of_pairs == current_pairs;
 }
 
+Card& get_card(Game_board_type& g_board,const Coordinate card_coord){
+    Card& card = g_board.at(card_coord.y - 1).at(card_coord.x - 1);
+    return card;
+}
+
 void turn_cards(Game_board_type& g_board, vector<Coordinate>& cards_coord)
 {
     for (Coordinate card_coord : cards_coord) {
-        g_board.at(card_coord.y - 1).at(card_coord.x - 1).turn();
+        get_card(g_board, card_coord).turn();
     }
 }
+
+void set_card_match(Game_board_type& g_board, vector<Coordinate>& cards_coord)
+{
+    Card& card_1 = get_card(g_board, cards_coord.at(0));
+    Card& card_2 = get_card(g_board, cards_coord.at(1));
+
+    if(card_1.get_letter() == card_2.get_letter()){
+        cout << FOUND << endl;
+        card_1.set_visibility(EMPTY);
+        card_2.set_visibility(EMPTY);
+    }else{
+        cout << NOT_FOUND << endl;
+        turn_cards(g_board, cards_coord);
+    }
+}
+
+
 
 void run_game(Game_board_type& g_board, const Player_type& players)
 {
@@ -370,15 +388,17 @@ void run_game(Game_board_type& g_board, const Player_type& players)
 
         vector<unsigned int> user_choice = get_player_choice(g_board, players.at(turn));
         if (user_choice.size() == 1 and user_choice.at(0) == FORCE_QUIT_INT) {
-            cout << GIVING_UP;
+            cout << GIVING_UP << endl;
             quit_now = true;
         }else{
-            vector<Coordinate> picked_coords;
+            vector<Coordinate> picked_cards_coords;
             for (vector<unsigned int>::size_type index = 0; index < user_choice.size(); index+=2) {
                 Coordinate card_coords = {user_choice.at(index), user_choice.at(index + 1)};
-                picked_coords.push_back(card_coords);
+                picked_cards_coords.push_back(card_coords);
             }
-            turn_cards(g_board, picked_coords);
+            turn_cards(g_board, picked_cards_coords);
+            print(g_board);
+            set_card_match(g_board, picked_cards_coords);
 
         }
         play_counter++;
