@@ -397,15 +397,15 @@ bool is_gameover(Game_board_type& g_board, const Player_type& players)
     //    return true;
 }
 
-// Checks that if there is still pairs in game that are not found
+// Sets the cards state
 //
 // @param g_board - ref to the game board
 // @param card_coords - ref to the coordinates
 //
-void turn_cards(Game_board_type& g_board, vector<Coordinate>& cards_coord)
+void set_cards_state(Game_board_type& g_board, vector<Coordinate>& cards_coord, const Visibility_type state)
 {
     for (Coordinate card_coord : cards_coord) {
-        g_board.at(card_coord.y - 1).at(card_coord.x - 1).turn();
+        g_board.at(card_coord.y - 1).at(card_coord.x - 1).set_visibility(state);;
     }
 }
 
@@ -419,13 +419,7 @@ bool card_match(Game_board_type& g_board, vector<Coordinate>& cards_coord)
     Card& card_1 = g_board.at(cards_coord.at(0).y - 1).at(cards_coord.at(0).x - 1);
     Card& card_2 = g_board.at(cards_coord.at(1).y - 1).at(cards_coord.at(1).x - 1);
     // If its a match - removes card from game
-    if (card_1.get_letter() == card_2.get_letter()) {
-        card_1.set_visibility(EMPTY);
-        card_2.set_visibility(EMPTY);
-        return true;
-    } else {
-        return true;
-    }
+    return card_1.get_letter() == card_2.get_letter();
 }
 
 // Prints all the players point
@@ -500,7 +494,7 @@ void run_game(Game_board_type& g_board, Player_type& players)
             }
 
             // Turns cards that was picked
-            turn_cards(g_board, picked_cards_coords);
+            set_cards_state(g_board, picked_cards_coords, OPEN);
 
             // Shows cards that was picked
             print(g_board);
@@ -509,9 +503,13 @@ void run_game(Game_board_type& g_board, Player_type& players)
             if (card_match(g_board, picked_cards_coords)) {
                 cout << FOUND << endl;
                 players.at(turn).increase_pairs();
+                // Removes cards from game
+                set_cards_state(g_board, picked_cards_coords, EMPTY);
             } else {
                 cout << NOT_FOUND << endl;
-                turn_cards(g_board, picked_cards_coords);
+
+                // Hides cards again
+                set_cards_state(g_board, picked_cards_coords, HIDDEN);
 
                 // Switches turn to next player
                 play_counter++;
