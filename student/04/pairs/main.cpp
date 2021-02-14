@@ -56,6 +56,11 @@ using Game_row_type = vector<Card>;
 using Player_type = vector<Player>;
 using Game_board_type = vector<vector<Card>>;
 
+struct Coordinate{
+    unsigned int x;
+    unsigned int y;
+};
+
 // Converts the given numeric string to the corresponding integer
 // (by calling stoi).
 // If the given string is not numeric, returns 0
@@ -347,6 +352,13 @@ bool is_gameover(Game_board_type& g_board, const Player_type& players)
     return number_of_pairs == current_pairs;
 }
 
+void turn_cards(Game_board_type& g_board, vector<Coordinate>& cards_coord)
+{
+    for (Coordinate card_coord : cards_coord) {
+        g_board.at(card_coord.y - 1).at(card_coord.x - 1).turn();
+    }
+}
+
 void run_game(Game_board_type& g_board, const Player_type& players)
 {
     bool quit_now = false;
@@ -357,8 +369,17 @@ void run_game(Game_board_type& g_board, const Player_type& players)
         turn = play_counter % players.size();
 
         vector<unsigned int> user_choice = get_player_choice(g_board, players.at(turn));
-        if(user_choice.size() == 1 and user_choice.at(0) == FORCE_QUIT_INT){
-            return;
+        if (user_choice.size() == 1 and user_choice.at(0) == FORCE_QUIT_INT) {
+            cout << GIVING_UP;
+            quit_now = true;
+        }else{
+            vector<Coordinate> picked_coords;
+            for (vector<unsigned int>::size_type index = 0; index < user_choice.size(); index+=2) {
+                Coordinate card_coords = {user_choice.at(index), user_choice.at(index + 1)};
+                picked_coords.push_back(card_coords);
+            }
+            turn_cards(g_board, picked_coords);
+
         }
         play_counter++;
     }
