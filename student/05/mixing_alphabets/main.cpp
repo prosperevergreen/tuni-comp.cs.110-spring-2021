@@ -19,7 +19,9 @@ int main()
             return EXIT_SUCCESS;
         }
 
-        // TODO: implement your solution here
+        if(word.length() > 3){
+            std::shuffle(++word.begin(), --word.end(), generator);
+        }
 	
         std::cout << word << std::endl;
     }
