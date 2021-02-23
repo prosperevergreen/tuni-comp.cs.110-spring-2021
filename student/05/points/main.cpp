@@ -13,7 +13,7 @@ int main()
     string input_filename = "";
     cout << "Input file: ";
     cin >> input_filename;
-
+    // Open file to read values
     ifstream input_fileobject(input_filename);
     if (not input_fileobject) {
         cout << "Error! The file " << input_filename << " cannot be opened." << endl;
@@ -24,13 +24,11 @@ int main()
         while (getline(input_fileobject, line)) {
 
             string delim = ":";
-
             string::size_type location = 0;
             location = line.find(delim);
             string name = line.substr(0, location);
             unsigned int point = stoi(line.substr(location + 1));
             pair<string, unsigned int> player(name, point);
-            cout << name << endl;
 
             // Check if player exists
             if (players.find(player.first) != players.end()) {
