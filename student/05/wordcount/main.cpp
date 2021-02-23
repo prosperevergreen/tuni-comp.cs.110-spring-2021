@@ -57,13 +57,16 @@ int main()
 
                 // Check if player exists
                 if (word_count.find(word.first) != word_count.end()) {
-                    // The player was found in the map.
-                    word_count.at(word.first).number++;
-                    if (word_count.at(word.first).lines.back() != word.second)
+                    // The word was found in the map.
+
+                    if (word_count.at(word.first).lines.back() != word.second) {
+                        word_count.at(word.first).number++;
                         word_count.at(word.first).lines.push_back(word.second);
+                    }
+
                 } else {
-                    // The player was not found in the map.
-                    // Insert player
+                    // The word was not found in the map.
+                    // Insert word
                     word_count.insert({ word.first, { .number = 1, .lines = { word.second } } });
                 }
             }
