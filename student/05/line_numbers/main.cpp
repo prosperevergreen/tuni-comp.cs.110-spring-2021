@@ -20,9 +20,10 @@ int main()
         return EXIT_FAILURE;
     } else {
         string line;
-        unsigned int counter = 0;
+        unsigned int counter = 1;
         while (getline(input_fileobject, line)) {
             output_fileobject << counter << " " << line << endl;
+            counter++;
         }
         input_fileobject.close();
         output_fileobject.close();
