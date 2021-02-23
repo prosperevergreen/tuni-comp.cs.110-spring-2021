@@ -6,12 +6,15 @@
 
 using namespace std;
 
+
+// word counter type
 struct Counter {
-    /* data */
     unsigned int number;
     vector<unsigned int> lines;
 };
 
+
+// function to split a string by a given delimiter
 const vector<string> explode(const string& s, const char& c)
 {
     string buff { "" };
@@ -37,44 +40,56 @@ int main()
     string input_filename = "";
     cout << "Input file: ";
     cin >> input_filename;
+
     // Open file to read values
     ifstream input_fileobject(input_filename);
+    // Check if file exists
     if (not input_fileobject) {
+        // File does not exist
         cout << "Error! The file " << input_filename << " cannot be opened." << endl;
         return EXIT_FAILURE;
     } else {
-        unsigned int line_counter = 1;
+        // File exists
+
+        // File line tracker
+        unsigned int curr_line = 1;
         string line;
+
+        // Word counter and line tracker
         map<string, Counter> word_count;
+
+        // Read file line by line
         while (getline(input_fileobject, line)) {
-
+            // Create vector and init with with words separated by delimiter in this case ' '
             vector<string> v { explode(line, ' ') };
-            pair<string, unsigned int> word;
 
+
+            string word = "";
             for (auto n : v) {
-                word.first = n;
-                word.second = line_counter;
-
+                word = n;
                 // Check if player exists
-                if (word_count.find(word.first) != word_count.end()) {
+                if (word_count.find(word) != word_count.end()) {
                     // The word was found in the map.
-
-                    if (word_count.at(word.first).lines.back() != word.second) {
-                        word_count.at(word.first).number++;
-                        word_count.at(word.first).lines.push_back(word.second);
+                    // Check if word has been added for line
+                    if (word_count.at(word).lines.back() != curr_line) {
+                        // Word not add
+                        // Add word
+                        word_count.at(word).number++;
+                        word_count.at(word).lines.push_back(curr_line);
                     }
 
                 } else {
                     // The word was not found in the map.
-                    // Insert word
-                    word_count.insert({ word.first, { .number = 1, .lines = { word.second } } });
+                    // Insert new word
+                    word_count.insert({ word, { .number = 1, .lines = { curr_line } } });
                 }
             }
-            line_counter++;
+            curr_line++;
         }
         // Close file
         input_fileobject.close();
-        // Create iterator to print word_count names and total points
+
+        // Create iterator to print word, total number of appearanc and lines of appearance
         for (auto iter : word_count) {
             cout << iter.first << " " << iter.second.number << ": ";
             for (vector<unsigned int>::size_type i = 0; i < iter.second.lines.size(); i++) {
