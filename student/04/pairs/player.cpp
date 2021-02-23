@@ -5,7 +5,7 @@
  * UserID: hsprev
  * E-Mail: prosper.evergreen@tuni.fi
  *
- * Notes about the program and it's implementation:
+ * Implementation of the Player Class
  *
  * */
 #include "player.hh"
