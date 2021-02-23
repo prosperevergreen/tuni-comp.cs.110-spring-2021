@@ -17,6 +17,7 @@ int main()
     ofstream output_fileobject(output_filename);
     if (not input_fileobject) {
         cout << "Error! The file " << input_filename << " cannot be opened." << endl;
+        input_fileobject.close();
         return EXIT_FAILURE;
     } else {
         string line;
@@ -25,6 +26,7 @@ int main()
             output_fileobject << counter << " " << line << endl;
             counter++;
         }
+
         input_fileobject.close();
         output_fileobject.close();
     }
