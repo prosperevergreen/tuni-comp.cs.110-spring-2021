@@ -14,14 +14,13 @@ int main()
     cin >> output_filename;
 
     ifstream input_fileobject(input_filename);
-    ofstream output_fileobject(output_filename);
     if (not input_fileobject) {
         cout << "Error! The file " << input_filename << " cannot be opened." << endl;
-        input_fileobject.close();
         return EXIT_FAILURE;
     } else {
         string line;
         unsigned int counter = 1;
+        ofstream output_fileobject(output_filename);
         while (getline(input_fileobject, line)) {
             output_fileobject << counter << " " << line << endl;
             counter++;
