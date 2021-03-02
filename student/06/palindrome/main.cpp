@@ -14,7 +14,7 @@ bool palindrome_recursive(std::string s)
 
     if (s.front() != s.back() && s.length() > 1)
         return false;
-    else if (s.length() <= 1)
+    else if (s.length() <= 2)
         return true;
     else {
         s.pop_back();
