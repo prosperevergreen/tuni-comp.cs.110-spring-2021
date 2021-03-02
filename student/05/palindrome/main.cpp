@@ -12,14 +12,14 @@ bool palindrome_recursive(std::string s)
 
     // Add your implementation here
 
-    if (a_word.front() != a_word.back() && a_word.length() > 1)
+    if (s.front() != s.back() && s.length() > 1)
         return false;
-    else if (a_word.length() <= 1)
+    else if (s.length() <= 1)
         return true;
     else {
-        a_word.pop_back();
-        a_word.erase(a_word.begin());
-        return palindrome_ckeck(a_word);
+        s.pop_back();
+        s.erase(s.begin());
+        return palindrome_recursive(s);
     }
 }
 
