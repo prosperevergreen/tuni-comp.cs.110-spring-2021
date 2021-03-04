@@ -34,6 +34,21 @@ void record_save(std::string id1, std::string id2, std::map<std::string, std::ve
     }
 }
 
+void record_print(std::string id, std::map<std::string, std::vector<std::string>>& record_book, std::string indent = "")
+{
+    // Print the current id and its indentation
+    std::cout << indent << id << std::endl;
+
+    // Check if id has a sub network
+    if (record_book.find(id) != record_book.end()) {
+        indent += "..";
+        for (auto sub_id : record_book.at(id)) {
+            record_print(sub_id, record_book, indent);
+        }
+    }
+}
+
+
 
 int main()
 {
@@ -70,6 +85,7 @@ int main()
             std::string id = parts.at(1);
 
             // TODO: Implement the command here!
+            record_print(id, netword_record);
 
         } else if (command == "C" or command == "c") {
             if (parts.size() != 2) {
