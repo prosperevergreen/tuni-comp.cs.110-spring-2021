@@ -48,7 +48,16 @@ void record_print(std::string id, std::map<std::string, std::vector<std::string>
     }
 }
 
-
+unsigned int record_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int count)
+{
+    // Check if id has a sub network
+    if (record_book.find(id) != record_book.end()) {
+        for (auto sub_id : record_book.at(id)) {
+            return count + record_count(sub_id, record_book, ++count);
+        }
+    }
+    return count;
+}
 
 int main()
 {
@@ -96,6 +105,7 @@ int main()
             std::string id = parts.at(1);
 
             // TODO: Implement the command here!
+            std::cout << record_count(id, netword_record, 0) << std::endl;
 
         } else if (command == "D" or command == "d") {
             if (parts.size() != 2) {
