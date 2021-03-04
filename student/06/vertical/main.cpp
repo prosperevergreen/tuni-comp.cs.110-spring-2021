@@ -12,9 +12,12 @@ void print_vertical(unsigned int num)
     // ------------
 
     // Add your implementation here
-    if (num < 10) return cout << num << endl;
-    print_vertical(num / 10);
-    cout << num % 10 << endl;
+    if (num < 10) {
+        cout << num << endl;
+    } else {
+        print_vertical(num / 10);
+        cout << num % 10 << endl;
+    }
 }
 
 // Do not modify rest of the code, or the automated testing won't work.
