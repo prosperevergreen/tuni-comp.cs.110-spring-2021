@@ -30,8 +30,8 @@ int sum_recursive(std::vector<int> v)
     // ------------
 
     // Add your implementation here
-    if (v.size() == 1) return v.back()
-    return v.back() + sum_recursive(v.pop_back())
+    if (v.size() == 1) return v.back();
+    return v.back() + sum_recursive(v.pop_back());
 }
 
 // Do not modify rest of the code, or the automated testing won't work.
