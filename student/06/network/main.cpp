@@ -53,23 +53,13 @@ unsigned int record_count(std::string id, std::map<std::string, std::vector<std:
     // Check if id has a sub network
     if (record_book.find(id) != record_book.end()) {
         for (auto sub_id : record_book.at(id)) {
-            return count + record_count(sub_id, record_book, count+1);
+            count += record_count(sub_id, record_book, 1 );
         }
+        return count;
     }
     return count;
 }
 
-//unsigned int record_depth_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int depth = 0)
-//{
-//    // Check if id has a sub network
-//    if (record_book.find(id) != record_book.end()) {
-//        ++depth;
-//        for (auto sub_id : record_book.at(id)) {
-//            return record_depth_count(sub_id, record_book, depth);
-//        }
-//    }
-//    return depth;
-//}
 
 unsigned int max_depth_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int depth = 0)
 {
