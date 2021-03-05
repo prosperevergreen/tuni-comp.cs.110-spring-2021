@@ -53,7 +53,7 @@ unsigned int record_count(std::string id, std::map<std::string, std::vector<std:
     // Check if id has a sub network
     if (record_book.find(id) != record_book.end()) {
         for (auto sub_id : record_book.at(id)) {
-            return count + record_count(sub_id, record_book, ++count);
+            return count + record_count(sub_id, record_book, count+1);
         }
     }
     return count;
