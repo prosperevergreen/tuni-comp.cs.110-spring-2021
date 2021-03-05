@@ -48,7 +48,7 @@ void record_print(std::string id, std::map<std::string, std::vector<std::string>
     }
 }
 
-unsigned int record_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int count)
+unsigned int record_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int count = 0)
 {
     // Check if id has a sub network
     if (record_book.find(id) != record_book.end()) {
@@ -58,6 +58,35 @@ unsigned int record_count(std::string id, std::map<std::string, std::vector<std:
     }
     return count;
 }
+
+//unsigned int record_depth_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int depth = 0)
+//{
+//    // Check if id has a sub network
+//    if (record_book.find(id) != record_book.end()) {
+//        ++depth;
+//        for (auto sub_id : record_book.at(id)) {
+//            return record_depth_count(sub_id, record_book, depth);
+//        }
+//    }
+//    return depth;
+//}
+
+unsigned int max_depth_count(std::string id, std::map<std::string, std::vector<std::string>>& record_book, unsigned int depth = 0, unsigned int depthSum = 0)
+{
+    // Check if id has a sub network
+    if (record_book.find(id) != record_book.end()) {
+        ++depth;
+        unsigned int max = 0;
+        for (auto sub_id : record_book.at(id)) {
+            unsigned int prev_depth = max_depth_count(sub_id, record_book, depth, depthSum);
+            max = prev_depth > max ? prev_depth : max;
+        }
+        return max;
+    }
+    return depth;
+}
+
+
 
 int main()
 {
@@ -105,7 +134,7 @@ int main()
             std::string id = parts.at(1);
 
             // TODO: Implement the command here!
-            std::cout << record_count(id, netword_record, 0) << std::endl;
+            std::cout << record_count(id, netword_record) << std::endl;
 
         } else if (command == "D" or command == "d") {
             if (parts.size() != 2) {
@@ -116,6 +145,7 @@ int main()
             std::string id = parts.at(1);
 
             // TODO: Implement the command here!
+            std::cout << max_depth_count(id, netword_record) << std::endl;
 
         } else if (command == "Q" or command == "q") {
             return EXIT_SUCCESS;
