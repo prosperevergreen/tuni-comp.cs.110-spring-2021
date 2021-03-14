@@ -156,6 +156,52 @@ int main()
         input_fileobject.close();
     }
 
-   
+    while (true) {
+        std::string command_line = "";
+        std::cout << "tramway> ";
+        std::cin >> command_line;
+        std::vector<std::string> parts = split(command_line, ' ', true);
+
+        std::string command = parts.at(0);
+
+        if (command == "LINES") {
+            // TODO: Implement the command here!
+            // record_save(id1, id2, netword_record);
+
+        } else if (command == "LINE" && parts.size() > 1) {
+            std::string line = parts.at(1);
+            // TODO: Implement the command here!
+
+        } else if (command == "STOPS") {
+            // TODO: Implement the command here!
+
+        } else if (command == "STOP" && parts.size() > 1) {
+            std::string stop = parts.at(1);
+            // TODO: Implement the command here!
+
+        } else if (command == "DISTANCE" && parts.size() > 3) {
+            std::string line = parts.at(1);
+            std::string stop1 = parts.at(2);
+            std::string stop2 = parts.at(3);
+            // TODO: Implement the command here!
+
+        } else if (command == "ADDLINE" && parts.size() > 1) {
+            std::string line = parts.at(1);
+            // TODO: Implement the command here!
+
+        } else if (command == "ADDSTOP" && parts.size() > 1) {
+            std::string stop = parts.at(1);
+            // TODO: Implement the command here!
+
+        } else if (command == "REMOVE" && parts.size() > 1) {
+            std::string stop = parts.at(1);
+            // TODO: Implement the command here!
+
+        } else if (command == "QUIT") {
+            return EXIT_SUCCESS;
+        } else {
+            std::cout << BAD_COMMAND << std::endl;
+        }
+    }
     return EXIT_SUCCESS;
 }
