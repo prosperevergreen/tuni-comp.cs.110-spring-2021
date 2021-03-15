@@ -424,7 +424,7 @@ void print_distance(Line& tram_way, std::string line, std::string stop1, std::st
     Stops stops = tram_way.at(line);
     Stops::size_type index1 = get_stop_position(stops, stop1);
     Stops::size_type index2 = get_stop_position(stops, stop2);
-    Stops::size_type lower_limit = 0
+    Stops::size_type lower_limit = 0;
 
 
     if (index1 < lower_limit || index2 < lower_limit) {
