@@ -161,7 +161,7 @@ bool add_tram_route(Line& tram_way, std::string line, std::string stop, float di
             // Add new stop
             tram_way.at(line).push_back({ .stop = stop, .distance = distance });
             // sort stops
-            sort(tram_way.at(line).begin(), tram_way.at(line).end(), sort_by_distance);
+            std::sort(tram_way.at(line).begin(), tram_way.at(line).end(), sort_by_distance);
         }
 
     } else {
@@ -424,7 +424,7 @@ void print_distance(Line& tram_way, std::string line, std::string stop1, std::st
     Stops::size_type index1 = get_stop_position(stops, stop1);
     Stops::size_type index2 = get_stop_position(stops, stop2);
 
-    if (index1 * index2 < 0) {
+    if (index1 < 0 || index2 < 0) {
         std::cout << BAD_STOP << std::endl;
         return;
     }
