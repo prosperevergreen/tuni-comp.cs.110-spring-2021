@@ -23,20 +23,20 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+// using namespace std;
 
 struct Stop {
-    string stop;
+    std::string stop;
     float distance;
 };
 
 struct Multi_Word {
-    string word;
-    string::size_type next_index;
+    std::string word;
+    std::string::size_type next_index;
 };
 
-using Stops = vector<Stop>;
-using Line = map<std::string, Stops>;
+using Stops = std::vector<Stop>;
+using Line = std::map<std::string, Stops>;
 
 const std::string FILE_NAME = "Give a name for input file: ";
 const std::string BAD_FILE = "Error: File could not be read.";
@@ -45,9 +45,12 @@ const std::string BAD_COMMAND = "Error: Invalid input.";
 const std::string BAD_STOP = "Error: Stop could not be found.";
 const std::string BAD_LINE = "Error: Line could not be found.";
 const std::string DUPLICATE_LINE_STOP = "Error: Stop/line already exists.";
-const string REMOVED_STOP = "Stop was removed from all lines.";
-const string LINES_INTRO = "All tramlines in alphabetical order:";
-const string STOPS_INTRO = "All stops in alphabetical order:";
+const std::string REMOVED_STOP = "Stop was removed from all lines.";
+const std::string LINES_INTRO = "All tramlines in alphabetical order:";
+const std::string STOPS_INTRO = "All stops in alphabetical order:";
+const std::string LINE_ADDED = "Line was added.";
+const std::string STOP_ADDED = "Stop was added.";
+const std::string STOP_REMOVED = "Stop was removed from all lines";
 
 // The most magnificent function in this whole program.
 // Prints a RASSE
@@ -94,29 +97,47 @@ std::vector<std::string> split(const std::string& s, const char delimiter, bool 
 bool sort_by_distance(Stop i, Stop j) { return (i.distance < j.distance); }
 
 /**
- * Checks if stop or distance is already in the line
+ * Returns the index of a stop in the stop vector
  *
  * @param line_stops Vector of stops of a line to be searched
  * @param stop Stop to be searched for in the line
  * @param distance Distance to be searched for in the line
  * @param pos Position of the stop in the line Vector to be searched
  *
- * @return Boolean of whether any match was found or not
+ * @return return the index of the match or -1
 */
-Stops::size_type has_stop_distance(Stops& line_stops, string stop, float distance = -1, Stops::size_type pos = 0)
+Stops::size_type get_stop_position(Stops& line_stops, std::string stop, Stops::size_type pos = 0)
 {
     // return false if stops have exhausted
     if (pos == line_stops.size()) {
         return -1;
     }
 
-    // return true if stops or distance is matched
-    if (line_stops.at(pos).stop == stop || line_stops.at(pos).distance == distance) {
+    // return true if stops is matched
+    if (line_stops.at(pos).stop == stop) {
         return pos;
     }
 
     // Test next stop
-    return has_stop_distance(line_stops, stop, distance, pos + 1);
+    return get_stop_position(line_stops, stop, ++pos);
+}
+
+/**
+ * Checks if a stop is in the tram line or not
+ *
+ * @param stops Vector of stopss
+ * @param stop_name Name of stop to be searched
+ *
+ * @return true if found else false
+*/
+bool has_stop_distance(Stops& stops, std::string stop_name, float distance = -1)
+{
+    for (Stops::iterator currStop = stops.begin(); currStop != stops.end(); ++currStop) {
+        if (currStop->stop == stop_name || currStop->distance == distance) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -129,12 +150,12 @@ Stops::size_type has_stop_distance(Stops& line_stops, string stop, float distanc
  *
  * @return Successfulness of the insertion
 */
-bool add_tram_route(Line& tram_way, string line, string stop, float distance = 0)
+bool add_tram_route(Line& tram_way, std::string line, std::string stop, float distance = 0)
 {
     // Check if line exist
     if (tram_way.find(line) != tram_way.end()) {
         // Check if stop or distance in line exist
-        if (has_stop_distance(tram_way.at(line), stop, distance) > -1) {
+        if (has_stop_distance(tram_way.at(line), stop, distance)) {
             return false;
         } else {
             // Add new stop
@@ -154,20 +175,32 @@ bool add_tram_route(Line& tram_way, string line, string stop, float distance = 0
 }
 
 /**
- * Print all the lines in the tram network
+ * Print the line name of current iter
  *
  * @param tram_way Tram routes
  * @param iter Poiter to a signle line in tram route
  *
 */
-void print_lines(Line& tram_way, Line::iterator iter)
+void print_line(Line& tram_way, Line::iterator iter)
 {
     if (iter == tram_way.end()) {
         return;
     }
 
-    cout << iter->first << endl;
-    print_lines(tram_way, ++iter);
+    std::cout << iter->first << std::endl;
+    print_line(tram_way, ++iter);
+}
+
+/**
+ * Print all the lines in the tram network
+ *
+ * @param tram_way Tram routes
+ *
+*/
+void print_all_lines(Line& tram_way)
+{
+    std::cout << LINES_INTRO << std::endl;
+    print_line(tram_way, tram_way.begin());
 }
 
 /**
@@ -193,7 +226,7 @@ Multi_Word get_word_or_words(std::vector<std::string>& command_parts, std::vecto
     if (full_word.at(0) == '"') {
         bool isEnd = false;
         std::vector<std::string>::size_type temp_index = start_point;
-        string temp_word = "";
+        std::string temp_word = "";
         while (!isEnd) {
             // Append word at command_parts index to temp_word
             if (temp_index == start_point) {
@@ -219,25 +252,33 @@ Multi_Word get_word_or_words(std::vector<std::string>& command_parts, std::vecto
 }
 
 /**
- * Prints the stops in the given line vector
+ * Prints a stop in a given line position
  *
  * @param stops Vector of stops of a line to be printed
  * @param index Position of the stop in the line Vector to be printed
  *
 */
-void print_stop(Stops& stops, Stops::size_type index = 0)
+void print_line_stop(Stops& stops, Stops::size_type index = 0)
 {
 
     if (index == stops.size()) {
         return;
     }
 
-    cout << " - " << stops.at(index).stop << " : " << stops.at(index).distance << endl;
+    std::cout << " - " << stops.at(index).stop << " : " << stops.at(index).distance << std::endl;
 
-    print_stop(stops, ++index);
+    print_line_stop(stops, ++index);
 }
 
-bool has_line(Line& tram_way, string line)
+/**
+ * Checks if a line is in the tram route or not
+ *
+ * @param tram_way Tram routes
+ * @param line Line name to be printed
+ *
+ * @return true if found else false
+*/
+bool has_line(Line& tram_way, std::string line)
 {
     // Check if line exist
     if (tram_way.find(line) != tram_way.end()) {
@@ -254,20 +295,28 @@ bool has_line(Line& tram_way, string line)
  * @param line Line name to be printed
  *
 */
-void print_line(Line& tram_way, string line)
+void print_line_stops(Line& tram_way, std::string line)
 {
     // Check if line exist
     if (has_line(tram_way, line)) {
-        cout << "Line " << line << " goes through these stops in the order they are listed:" << endl;
-        print_stop(tram_way.at(line));
+        std::cout << "Line " << line << " goes through these stops in the order they are listed:" << std::endl;
+        print_line_stop(tram_way.at(line));
     } else {
-        cout << BAD_LINE << endl;
+        std::cout << BAD_LINE << std::endl;
     }
 }
 
-void get_stops(set<string>& stops_acc, Stops& stops)
+/**
+ * Adds the stops to a set
+ *
+ * @param stops_acc ref of Accumulated stop set to be added new stops
+ * @param stops Vector of stops of a line to be searched
+ *
+*/
+void add_stops(std::set<std::string>& stops_acc, Stops& stops)
 {
     for (Stops::iterator stop = stops.begin(); stop != stops.end(); ++stop) {
+        // Continue if stop is already in the set else add
         if (stops_acc.find(stop->stop) != stops_acc.end()) {
             continue;
         } else {
@@ -276,76 +325,159 @@ void get_stops(set<string>& stops_acc, Stops& stops)
     }
 }
 
-void print_lines(Line& tram_way, string stop)
+/**
+ * Print the lines of a given stop
+ *
+ * @param tram_way Tram routes
+ * @param stop Name of the stop to find it's lines
+ *
+*/
+void print_stop_lines(Line& tram_way, std::string stop)
 {
-    set<string> lines_acc;
+    std::set<std::string> lines_acc;
 
     for (Line::iterator line = tram_way.begin(); line != tram_way.end(); ++line) {
-        if (has_stop_distance(line->second, stop) > -1)
+        // Add line if stop is in line stops
+        if (has_stop_distance(line->second, stop))
             lines_acc.insert(line->first);
     }
 
     if (lines_acc.size() == 0) {
-        cout << BAD_STOP << endl;
+        std::cout << BAD_STOP << std::endl;
     } else {
-        cout << "Stop " << stop << " can be found on the following lines:" << endl;
+        std::cout << "Stop " << stop << " can be found on the following lines:" << std::endl;
 
-        for (set<string>::iterator line_name = lines_acc.begin(); line_name != lines_acc.end(); ++line_name) {
-            cout << " - " << *line_name << endl;
+        for (std::set<std::string>::iterator line_name = lines_acc.begin(); line_name != lines_acc.end(); ++line_name) {
+            std::cout << " - " << *line_name << std::endl;
         }
     }
 }
 
+/**
+ * Print all the stops of the tram network
+ *
+ * @param tram_way Tram routes
+ *
+*/
 void print_all_stops(Line& tram_way)
 {
-    set<string> stops_acc;
+    std::set<std::string> stops_acc;
 
     for (Line::iterator line = tram_way.begin(); line != tram_way.end(); ++line) {
-        get_stops(stops_acc, line->second);
+        add_stops(stops_acc, line->second);
     }
 
-    cout << STOPS_INTRO << endl;
+    std::cout << STOPS_INTRO << std::endl;
 
-    for (set<string>::iterator stop_name = stops_acc.begin(); stop_name != stops_acc.end(); ++stop_name) {
-        cout << *stop_name << endl;
+    for (std::set<std::string>::iterator stop_name = stops_acc.begin(); stop_name != stops_acc.end(); ++stop_name) {
+        std::cout << *stop_name << std::endl;
     }
 }
 
-string str_toupper(string word)
+/**
+ * Convert a string to upper case
+ *
+ * @param word String to be converted
+ * 
+ * @return String in upper case
+*/
+std::string str_to_upper(std::string word)
 {
-    string word_uppercase = "";
+    std::string word_uppercase = "";
     std::locale loc;
     for (std::string::size_type i = 0; i < word.length(); ++i)
         word_uppercase += std::toupper(word[i], loc);
     return word_uppercase;
 }
 
+/**
+ * Calculate the absolute distance between two stops
+ * 
+ * @param stops Vector of stops to be searched
+ * @param startIndex index of the start position
+ * @param stopIndex index of the stop position
+ * 
+ * @return the distance between the stops
+*/
 float calc_distance(Stops& stops, Stops::size_type startIndex, Stops::size_type stopIndex)
 {
-    return abs(stops.at(startIndex).distance - stops.at(stopIndex).distance);;
+    return abs(stops.at(startIndex).distance - stops.at(stopIndex).distance);
 }
 
-void print_distance(Line& tram_way, string line, string stop1, string stop2)
+/**
+ * Prints the absolute distance between two stops
+ *
+ * @param tram_way Tram routes
+ * @param line Name of the line to be used
+ * @param stop1 Name of the stop to be used
+ * @param stop2 Name of the line to be used
+ * 
+*/
+void print_distance(Line& tram_way, std::string line, std::string stop1, std::string stop2)
 {
     if (!has_line(tram_way, line)) {
-        cout << BAD_LINE << endl;
+        std::cout << BAD_LINE << std::endl;
         return;
     }
 
     Stops stops = tram_way.at(line);
-    Stops::size_type index1 = has_stop_distance(stops, stop1);
-    Stops::size_type index2 = has_stop_distance(stops, stop2);
+    Stops::size_type index1 = get_stop_position(stops, stop1);
+    Stops::size_type index2 = get_stop_position(stops, stop2);
 
     if (index1 * index2 < 0) {
-        cout << BAD_STOP << endl;
+        std::cout << BAD_STOP << std::endl;
         return;
     }
 
     float distance = calc_distance(stops, index1, index2);
 
-    cout << "Distance between "<< stop1 <<" and "<< stop2 <<" is "<< distance << endl;
+    std::cout << "Distance between " << stop1 << " and " << stop2 << " is " << distance << std::endl;
 }
 
+/**
+ * Add a new line with no stops to tram ways
+ *
+ * @param tram_way Tram routes
+ * @param line Name of the line to be used
+ * 
+ * @return Successfulness of the operation
+*/
+bool add_line(Line& tram_way, std::string line_name)
+{
+    // Check if line exist
+    if (tram_way.find(line_name) != tram_way.end()) {
+        return false;
+    } else {
+        // The line was not found in the map.
+        // Create new line
+        tram_way.insert({ line_name, {} });
+        return true;
+    }
+}
+
+/**
+ * Remove stop from all lines in tram ways
+ *
+ * @param tram_way Tram routes
+ * @param stop_name Name of the stop to be removed
+ * 
+ * @return Successfulness of the operation
+*/
+bool remove_stop(Line& tram_way, std::string stop_name)
+{
+    bool found_stop = false;
+
+    for (Line::iterator line = tram_way.begin(); line != tram_way.end(); ++line) {
+        // Removes stop if line has stop in it
+        if (has_stop_distance(line->second, stop_name)) {
+            Stops::size_type pos = get_stop_position(line->second, stop_name);
+            line->second.erase(line->second.begin() + pos);
+            found_stop = true;
+        }
+    }
+
+    return found_stop;
+}
 
 // Short and sweet main.
 int main()
@@ -355,23 +487,23 @@ int main()
     // TODO: Implement the datastructure here
 
     Line tram_way;
-    vector<string> tram_stops;
+    std::vector<std::string> tram_stops;
 
-    string input_filename = "";
-    cout << FILE_NAME;
-    cin >> input_filename;
+    std::string input_filename = "";
+    std::cout << FILE_NAME;
+    std::cin >> input_filename;
 
     // Open file to read values
-    ifstream input_fileobject(input_filename);
+    std::ifstream input_fileobject(input_filename);
 
     // Check if file exists
     if (not input_fileobject) {
         // File does not exist
-        cout << BAD_FILE << endl;
+        std::cout << BAD_FILE << std::endl;
         return EXIT_FAILURE;
     } else {
         // File exists
-        string file_line = "";
+        std::string file_line = "";
         // Read file line by line
         while (getline(input_fileobject, file_line)) {
             std::vector<std::string> parts = split(file_line, ';', true);
@@ -379,7 +511,7 @@ int main()
             if (parts.size() < 2) {
                 // File content has bad format
                 input_fileobject.close();
-                cout << BAD_FILE_CONTENT << endl;
+                std::cout << BAD_FILE_CONTENT << std::endl;
                 return EXIT_FAILURE;
             } else if (parts.size() == 2) {
                 did_add = add_tram_route(tram_way, parts.at(0), parts.at(1));
@@ -389,57 +521,91 @@ int main()
 
             if (!did_add) {
                 input_fileobject.close();
-                cout << DUPLICATE_LINE_STOP << endl;
+                std::cout << DUPLICATE_LINE_STOP << std::endl;
                 return EXIT_FAILURE;
             }
         }
         // Close file
         input_fileobject.close();
     }
-    cin.ignore();
+
+    std::cin.ignore();
+
     while (true) {
+
         std::string command_line = "";
         std::cout << "tramway> ";
-        getline(std::cin, command_line);
-        std::vector<std::string> parts = split(command_line, ' ', true);
-        std::string command = str_toupper(parts.at(0));
 
+        // Read command line input
+        getline(std::cin, command_line);
+
+        // Split command into words
+        std::vector<std::string> parts = split(command_line, ' ', true);
+
+        // Get command action word
+        std::string command = str_to_upper(parts.at(0));
+
+        // Compare command action word
         if (command == "LINES") {
 
-            cout << LINES_INTRO << endl;
-            print_lines(tram_way, tram_way.begin());
+            print_all_lines(tram_way);
 
-        } else if (command == "LINE" && parts.size() > 1) {
+        } else if (command == "LINE" && parts.size() >= 2) {
 
             std::string line = get_word_or_words(parts, 1).word;
-            print_line(tram_way, line);
+            print_line_stops(tram_way, line);
 
         } else if (command == "STOPS") {
 
             print_all_stops(tram_way);
 
-        } else if (command == "STOP" && parts.size() > 1) {
+        } else if (command == "STOP" && parts.size() >= 2) {
 
             std::string stop = get_word_or_words(parts, 1).word;
-            print_lines(tram_way, stop);
+            print_stop_lines(tram_way, stop);
 
-        } else if (command == "DISTANCE" && parts.size() > 3) {
+        } else if (command == "DISTANCE" && parts.size() >= 4) {
+
             Multi_Word line = get_word_or_words(parts, 1);
             Multi_Word stop1 = get_word_or_words(parts, line.next_index);
             Multi_Word stop2 = get_word_or_words(parts, stop1.next_index);
             print_distance(tram_way, line.word, stop1.word, stop2.word);
 
-        } else if (command == "ADDLINE" && parts.size() > 1) {
-            std::string line = parts.at(1);
+        } else if (command == "ADDLINE" && parts.size() >= 2) {
+
+            std::string line = get_word_or_words(parts, 1).word;
+            bool did_add = add_line(tram_way, line);
+
+            if (did_add) {
+                std::cout << LINE_ADDED << std::endl;
+            } else {
+                std::cout << DUPLICATE_LINE_STOP << std::endl;
+            }
             // TODO: Implement the command here!
 
-        } else if (command == "ADDSTOP" && parts.size() > 1) {
-            std::string stop = parts.at(1);
-            // TODO: Implement the command here!
+        } else if (command == "ADDSTOP" && parts.size() >= 4) {
+            Multi_Word line = get_word_or_words(parts, 1);
+            Multi_Word stop = get_word_or_words(parts, line.next_index);
+            Multi_Word distance = get_word_or_words(parts, stop.next_index);
 
-        } else if (command == "REMOVE" && parts.size() > 1) {
-            std::string stop = parts.at(1);
-            // TODO: Implement the command here!
+            bool did_add = add_tram_route(tram_way, line.word, stop.word, stof(distance.word));
+
+            if (did_add) {
+                std::cout << STOP_ADDED << std::endl;
+            } else {
+                std::cout << DUPLICATE_LINE_STOP << std::endl;
+            }
+
+        } else if (command == "REMOVE" && parts.size() >= 2) {
+
+            std::string stop = get_word_or_words(parts, 1).word;
+            bool did_remove = remove_stop(tram_way, stop);
+
+            if (did_remove) {
+                std::cout << STOP_REMOVED << std::endl;
+            } else {
+                std::cout << BAD_STOP << std::endl;
+            }
 
         } else if (command == "QUIT") {
             return EXIT_SUCCESS;
