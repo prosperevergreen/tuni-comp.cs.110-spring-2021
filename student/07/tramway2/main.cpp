@@ -18,6 +18,7 @@
 #include <fstream>
 #include <iostream>
 #include <locale> // std::locale, std::toupper
+#include <algorithm>    // std::sort
 #include <map>
 #include <set>
 #include <string>
@@ -110,7 +111,7 @@ Stops::size_type get_stop_position(Stops& line_stops, std::string stop, Stops::s
 {
     // return false if stops have exhausted
     if (pos == line_stops.size()) {
-        return -1;
+        return static_cast<Stops::size_type>(-1);
     }
 
     // return true if stops is matched
@@ -161,7 +162,7 @@ bool add_tram_route(Line& tram_way, std::string line, std::string stop, float di
             // Add new stop
             tram_way.at(line).push_back({ .stop = stop, .distance = distance });
             // sort stops
-            std::sort(tram_way.at(line).begin(), tram_way.at(line).end(), sort_by_distance);
+            sort(tram_way.at(line).begin(), tram_way.at(line).end(), sort_by_distance);
         }
 
     } else {
@@ -423,8 +424,10 @@ void print_distance(Line& tram_way, std::string line, std::string stop1, std::st
     Stops stops = tram_way.at(line);
     Stops::size_type index1 = get_stop_position(stops, stop1);
     Stops::size_type index2 = get_stop_position(stops, stop2);
+    Stops::size_type lower_limit = 0
 
-    if (index1 < 0 || index2 < 0) {
+
+    if (index1 < lower_limit || index2 < lower_limit) {
         std::cout << BAD_STOP << std::endl;
         return;
     }
