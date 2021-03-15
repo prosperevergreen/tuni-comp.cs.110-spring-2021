@@ -51,7 +51,7 @@ const std::string LINES_INTRO = "All tramlines in alphabetical order:";
 const std::string STOPS_INTRO = "All stops in alphabetical order:";
 const std::string LINE_ADDED = "Line was added.";
 const std::string STOP_ADDED = "Stop was added.";
-const std::string STOP_REMOVED = "Stop was removed from all lines";
+const std::string STOP_REMOVED = "Stop was removed from all lines.";
 
 // The most magnificent function in this whole program.
 // Prints a RASSE
