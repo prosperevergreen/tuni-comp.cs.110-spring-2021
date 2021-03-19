@@ -45,28 +45,22 @@ int main()
             float opr1 = 0, opr2 = 0;
 
             if (input == "+") {
-                cout << *top << " in +" << endl;
                 opr2 = *top;
                 *top = 0;
                 opr1 = *(--top);
                 *top = opr1 + opr2;
-                cout << *top << " out +" << endl;
             }
             if (input == "-") {
-                cout << *top << " in -" << endl;
                 opr2 = *top;
                 *top = 0;
                 opr1 = *(--top);
                 *top = opr1 - opr2;
-                cout << *top << " out -" << endl;
             }
             if (input == "*") {
-                cout << *top << " in *" << endl;
                 opr2 = *top;
                 *top = 0;
                 opr1 = *(--top);
                 *top = opr1 * opr2;
-                cout << *top << " out *" << endl;
             }
 
             if (input == "/") {
@@ -75,12 +69,10 @@ int main()
                     cout << "Error: Division by zero" << endl;
                     return EXIT_FAILURE;
                 }
-                cout << *top << " in /" << endl;
                 opr2 = *top;
                 *top = 0;
                 opr1 = *(--top);
                 *top = opr1 / opr2;
-                cout << *top << " out /" << endl;
             }
 
             continue;
