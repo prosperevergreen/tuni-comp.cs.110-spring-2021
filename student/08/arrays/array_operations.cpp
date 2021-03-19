@@ -27,7 +27,7 @@ void copy(int* itemptr, int* endptr, int* targetptr)
 
 void reverse(int* leftptr, int* rightptr)
 {
-    int size = rightptr - leftptr;
+    int size = 1 + (rightptr - leftptr);
 
     for (int i = 0; i <= size / 2; i++) {
         int temp = *(leftptr + i);
