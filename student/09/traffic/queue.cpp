@@ -24,10 +24,12 @@ void Queue::enqueue(string reg)
 {
     // Check if light is green to prevent adding to queue
     if (is_green_) { // light is green ((cannot add to vehicle to queue)
+
+        cout << "GREEN: ";
         if (first_ == nullptr) { // Quene is empty
-            cout << "Green: The vehicle " << reg << " need not stop to wait" << endl;
+            cout << "The vehicle " << reg << " need not stop to wait" << endl;
         } else { // Queue is not empty
-            cout << "Green: Vehicle(s) " << reg << " can go on" << endl;
+            cout << "Vehicle(s) " << reg << " can go on" << endl;
         }
     } else { // Light is red (can add to vehicle to queue)
 
@@ -58,7 +60,7 @@ void Queue::print()
 {
     // Check light color
     if (is_green_) { // Light is green
-        cout << "Green: ";
+        cout << "GREEN: ";
         // Check if queue is empty
         if (first_ == nullptr) {
             cout << "No vehicles waiting in traffic lights" << endl;
