@@ -121,7 +121,7 @@ int main()
         if (string_to_double(pieces.at(1), params1) && string_to_double(pieces.at(2), params2)) {
             cout << command.action(params1, params2) << endl;
         }else{
-            cout << "Error: a non-number operand" << endl;
+            cout << "Error: a non-number operand." << endl;
         }
     }
 }
