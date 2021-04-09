@@ -29,3 +29,35 @@ void Cards::print(std::ostream& s) {
 // but open the file cards.hh and click the declaration of the method
 // by the right mouse button and select
 // Refactor > Add definition in cards.cpp
+
+
+// Removes the topmost card and passes it in the reference parameter id to the caller.
+// Returns false, if the data structure is empty, otherwise returns true.
+bool Cards::remove(int& id){
+    if (top_ == nullptr) {
+        return false;
+    }
+
+    id = top_->data;
+    top_ = top_->next;
+
+    return true;
+}
+
+// Reverses the content of the data structure as opposite.
+void Cards::reverse(){
+    if (top_ == nullptr || top_->next == nullptr) {
+        return;
+    }
+
+    std::shared_ptr<Card_data> temp_next = nullptr;
+    std::shared_ptr<Card_data> temp_prev = nullptr;
+
+    while(top_ != nullptr){
+        temp_next = top_->next;
+        top_->next = temp_prev;
+        temp_prev = top_;
+        top_ = temp_next;
+    }
+    top_ = temp_prev;
+}
