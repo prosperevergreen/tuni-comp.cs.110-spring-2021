@@ -11,10 +11,12 @@
 #ifndef HOSPITAL_HH
 #define HOSPITAL_HH
 
-#include "person.hh"
 #include "careperiod.hh"
 #include "date.hh"
+#include "person.hh"
 #include <map>
+#include <queue>
+#include <vector>
 
 // Error and information outputs
 const std::string ALREADY_EXISTS = "Error: Already exists: ";
@@ -23,14 +25,13 @@ const std::string CANT_FIND = "Error: Can't find anything matching: ";
 const std::string STAFF_RECRUITED = "A new staff member has been recruited.";
 const std::string PATIENT_ENTERED = "A new patient has entered.";
 const std::string PATIENT_LEFT = "Patient left hospital, care period closed.";
-const std::string MEDICINE_ADDED= "Medicine added for: ";
-const std::string MEDICINE_REMOVED= "Medicine removed from: ";
-const std::string STAFF_ASSIGNED= "Staff assigned for: ";
+const std::string MEDICINE_ADDED = "Medicine added for: ";
+const std::string MEDICINE_REMOVED = "Medicine removed from: ";
+const std::string STAFF_ASSIGNED = "Staff assigned for: ";
 
 using Params = const std::vector<std::string>&;
 
-class Hospital
-{
+class Hospital {
 public:
     // Constructor.
     Hospital();
@@ -113,6 +114,8 @@ private:
     std::map<std::string, Person*> staff_;
 
     // More attributes and methods
+
+   std::map<std::string, std::vector<CarePeriod*>>care_record_;
 };
 
 #endif // HOSPITAL_HH
