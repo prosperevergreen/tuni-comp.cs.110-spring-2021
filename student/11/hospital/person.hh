@@ -62,7 +62,6 @@ private:
     };
     // Medicine names and their prescriptions
     std::map<std::string, Prescription> medicines_;
-    
 };
 
 #endif // PERSON_HH

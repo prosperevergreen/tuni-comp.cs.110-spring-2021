@@ -10,11 +10,10 @@
 #define UTILS_HH
 
 #include "date.hh"
-#include <vector>
 #include <string>
+#include <vector>
 
-namespace utils
-{
+namespace utils {
 /**
  * @brief split
  * @param str
@@ -22,7 +21,7 @@ namespace utils
  * @return vector containing the parts, no delim chars
  * Splits the given string at every delim char
  */
-std::vector<std::string> split( std::string& str, char delim = ';');
+std::vector<std::string> split(std::string& str, char delim = ';');
 
 /**
  * @brief is_numeric
@@ -37,6 +36,7 @@ bool is_numeric(std::string s, bool zero_allowed);
  * Static means this variable will only be created once per run.
  */
 static Date today = Date(24, 2, 2021);
+
 }
 
 #endif // UTILS_HH

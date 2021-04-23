@@ -45,52 +45,57 @@ void Hospital::enter(Params params)
     // Get pateients id
     std::string patient_id = params.at(0);
 
-    // Check if patient is currently in hospital
+    // Check if patient is not currently in hospital
     if (current_patients_.find(patient_id) != current_patients_.end()) {
         std::cout << ALREADY_EXISTS << patient_id << std::endl;
         return;
     }
 
-    // Create a patient instance
-    Person* patient = new Person(patient_id);
-    current_patients_.insert({ patient_id, patient }); // Add patient to hospital list
+    // Check if patient had a previous care period
+    CarePeriod* care_period = get_care_period(patient_id);
+    // If patient hadn't visited hospital (no care period),
+    // create a new patient object, else get patient from prev care period
+    Person* patient = care_period == nullptr ? new Person(patient_id) : care_period->get_patient();
 
-    Date today = utils::today; // Get the current date
-    CarePeriod* care = new CarePeriod(today, patient); // Initialize the patient care period
+    // Add patient to hospital list
+    current_patients_.insert({ patient_id, patient });
+    // Get the current date
+    Date today = utils::today;
+    // Initialize patient new care period
+    CarePeriod* new_care_record = new CarePeriod(today, patient);
 
-    // Check if patient is in hospital care record list
-    if (care_record_.find(patient_id) != care_record_.end()) {
-        // Patient has been previously in hospital care record
-        care_record_.at(patient_id).push_back(care);
-    } else {
-        // has no record care with the hospital
-        care_record_.insert({ patient_id, { care } });
-    }
+    // Add to care records
+    care_records_.push_back(new_care_record);
 
     std::cout << PATIENT_ENTERED << std::endl;
 }
 
+/**
+* @brief Function that implements discharging a patient from the hospital
+* @param params - vector string containing the patient's id
+*
+*/
 void Hospital::leave(Params params)
 {
     std::string patient_id = params.at(0);
+
+    // Check if patient in hospital
     if (current_patients_.find(patient_id) == current_patients_.end()) {
         std::cout << CANT_FIND << patient_id << std::endl;
         return;
     }
 
-    // set end date of patients current care period
-    Date today = utils::today; // Get the current date
-    const unsigned int care_count = care_record_.at(patient_id).size();
-    // End date for current care plan
-    care_record_.at(patient_id).at(care_count - 1)->set_end_date(today);
-    // Free patient memory
-    delete current_patients_.at(patient_id);
+    // Patient in hospital
+
+    // Get the current date
+    Date today = utils::today;
+    // End patient current care plan
+    get_care_period(patient_id)->set_end_date(today);
     // Remove patient from hospital current patients
     current_patients_.erase(patient_id);
     std::cout << PATIENT_LEFT << std::endl;
 }
 
-// Assigns the given staff member to work in the given patient’s current care period.
 void Hospital::assign_staff(Params params)
 {
     std::string specialist_id = params.at(0);
@@ -98,21 +103,28 @@ void Hospital::assign_staff(Params params)
 
     // Check if staff exists
     if (staff_.find(specialist_id) == staff_.end()) {
-        std::cout << CANT_FIND << specialist_id << specialist_id << std::endl;
+        std::cout << CANT_FIND << specialist_id << std::endl;
         return;
     }
 
-    // Check if patient is in hospital
+    // Check if patient is not in hospital
     if (current_patients_.find(patient_id) == current_patients_.end()) {
         std::cout << CANT_FIND << patient_id << std::endl;
         return;
     }
 
+    std::cout << STAFF_ASSIGNED << patient_id << std::endl;
+
     // Get access to the latest patient care plan
-    const unsigned int care_count = care_record_.at(patient_id).size();
+    CarePeriod* current_care_period = get_care_period(patient_id);
+
+    // Check if patient has already been assigned the staff
+    if (current_care_period->has_staff(specialist_id)) {
+        return;
+    }
 
     // Add staff to patient assignee list
-    care_record_.at(patient_id).at(care_count - 1)->add_assignee(staff_.at(specialist_id));
+    current_care_period->add_assignee(staff_.at(specialist_id));
 }
 
 void Hospital::add_medicine(Params params)
@@ -153,6 +165,20 @@ void Hospital::remove_medicine(Params params)
 
 void Hospital::print_patient_info(Params params)
 {
+    std::string patient_id = params.at(0);
+
+    CarePeriod* latest_care_period = get_care_period(patient_id);
+
+    if (latest_care_period == nullptr) {
+        std::cout << CANT_FIND << patient_id << std::endl;
+        return;
+    }
+
+    for (auto care_period : care_records_) {
+        care_period->print();
+    }
+    std::cout << PRINT_MEDICINE;
+    latest_care_period->get_patient()->print_medicines(PRE_TEXT);
 }
 
 void Hospital::print_care_periods_per_staff(Params params)
@@ -210,4 +236,15 @@ void Hospital::advance_date(Params params)
     std::cout << "New date is ";
     utils::today.print();
     std::cout << std::endl;
+}
+
+CarePeriod* Hospital::get_care_period(const std::string& patient_id)
+{
+    for (std::vector<CarePeriod*>::size_type i = care_records_.size() - 1; i >= 0; --i) {
+        CarePeriod* care_record = care_records_.at(i);
+        if (care_record->get_patient()->get_id() == patient_id) {
+            return care_record;
+        }
+    }
+    return nullptr;
 }
