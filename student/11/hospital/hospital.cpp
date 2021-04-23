@@ -185,8 +185,10 @@ void Hospital::print_patient_info(Params params) {
     }
 
     for (auto care_period : care_periods_) {
-        care_period->print();
+        if(care_period->get_patient()->get_id() == patient_id)
+            care_period->print();
     }
+
     std::cout << PRINT_MEDICINE;
     latest_care_period->get_patient()->print_medicines(PRE_TEXT);
 }
