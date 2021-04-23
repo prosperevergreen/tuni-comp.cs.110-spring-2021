@@ -15,6 +15,7 @@
 #include "careperiod.hh"
 #include "date.hh"
 #include <map>
+#include <set>
 
 // Error and information outputs
 const std::string ALREADY_EXISTS = "Error: Already exists: ";
@@ -27,7 +28,8 @@ const std::string MEDICINE_ADDED= "Medicine added for: ";
 const std::string MEDICINE_REMOVED= "Medicine removed from: ";
 const std::string STAFF_ASSIGNED= "Staff assigned for: ";
 const std::string PRINT_MEDICINE = "* Medicines:";
-const std::string PRE_TEXT = "  -";
+const std::string PRE_TEXT = "  - ";
+const std::string NONE = "None";
 
 using Params = const std::vector<std::string>&;
 
@@ -115,8 +117,11 @@ private:
     std::map<std::string, Person*> staff_;
 
     // More attributes and methods
-    std::vector<CarePeriod*> care_records_;
+    std::vector<CarePeriod*> care_periods_;
+    std::map<std::string,std::set<std::string>> medicines_;
+    std::set<std::string> all_patients_id;
     CarePeriod* get_care_period(const std::string& patient_id);
+    void remove_medicine_patient(std::string patient, std::string medicine);
 };
 
 #endif // HOSPITAL_HH
