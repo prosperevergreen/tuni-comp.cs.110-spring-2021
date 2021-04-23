@@ -2,12 +2,18 @@
  * ----------
  * COMP.CS.110 SPRING 2021
  * ----------
+ * Desc:
  * Class for describing a hospital. Only a single object created from this
  * class. Implements all commands in hospital program.
  *
- * Note: Students need change this class to implement commands missing
- * in the template code.
+ * Program author
+ * Name: Prosper Evergreen
+ * Student number: 050542738
+ * UserID: hsprev
+ * E-Mail: prosper.evergreen@tuni.fi
+ *
  * */
+
 #ifndef HOSPITAL_HH
 #define HOSPITAL_HH
 
