@@ -73,3 +73,7 @@ Thumbs.db
 *.dll
 *.exe
 
+#CLion
+cmake-build-debug
+CMakeLists.txt
+.idea
