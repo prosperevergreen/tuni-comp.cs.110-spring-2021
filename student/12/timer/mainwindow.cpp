@@ -8,11 +8,12 @@ MainWindow::MainWindow(QWidget* parent)
     , min_(0)
 {
     ui->setupUi(this);
+
+    ui->lcdNumberMin->setStyleSheet("background-color: blue; color:white;");
+    ui->lcdNumberSec->setStyleSheet("background-color: pink; color:black;");
     setTimer();
-    QTimer* timer = new QTimer(this);
+    timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::runTimer);
-    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startTimer);
-//    timer->start(SEC);
 }
 
 void MainWindow::runTimer()
@@ -30,6 +31,7 @@ void MainWindow::runTimer()
             min_ = 0;
         }
     }
+    // update timer
     setTimer();
 }
 
@@ -45,11 +47,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::startTimer()
+void MainWindow::on_startButton_clicked()
 {
     if (timer->isActive())
         return;
-//    timer->start(SEC);
+    timer->start(SEC);
 }
 
 void MainWindow::on_stopButton_clicked()

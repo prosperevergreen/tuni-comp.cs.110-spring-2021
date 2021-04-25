@@ -27,7 +27,7 @@ private slots:
     // Add your slots here
     void runTimer();
 
-    void startTimer();
+    void on_startButton_clicked();
 
     void on_stopButton_clicked();
 
