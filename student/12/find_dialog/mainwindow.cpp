@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->findPushButton,&QPushButton::clicked, this, &MainWindow::findPushButton);
 }
 
 MainWindow::~MainWindow()
@@ -17,24 +18,24 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_pushButtonFind_clicked()
+void MainWindow::findPushButton()
 {
-    Qt::CaseSensitivity caseSense = ui->checkBoxMatchCap->isChecked() ?  Qt::CaseSensitive : Qt::CaseInsensitive;
-    QString fileName = ui->lineEditFileName->text();
-    ui->lineEditFileName->setText("");
-    QString searchTerm = ui->lineEditSearchTerm->text();
-    ui->lineEditSearchTerm->setText("");
+    Qt::CaseSensitivity caseSense = ui->matchCheckBox->isChecked() ?  Qt::CaseSensitive : Qt::CaseInsensitive;
+    QString fileName = ui->fileLineEdit->text();
+    ui->fileLineEdit->setText("");
+    QString searchTerm = ui->keyLineEdit->text();
+    ui->keyLineEdit->setText("");
 
     // Search for file
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-         ui->textBrowserResult->setText(NO_FILE);
+         ui->textBrowser->setText(NO_FILE);
          return;
     }
 
     // Check if search word exists
     if(searchTerm.isEmpty()){
-        ui->textBrowserResult->setText(YES_FILE);
+        ui->textBrowser->setText(YES_FILE);
         return;
     }
 
@@ -44,11 +45,11 @@ void MainWindow::on_pushButtonFind_clicked()
         QString line = in.readLine();
 
         if(line.contains(searchTerm, caseSense)){
-            ui->textBrowserResult->setText(YES_WORD);
+            ui->textBrowser->setText(YES_WORD);
             return;
         }
     }
 
     // Word not found
-    ui->textBrowserResult->setText(NO_WORD);
+    ui->textBrowser->setText(NO_WORD);
 }

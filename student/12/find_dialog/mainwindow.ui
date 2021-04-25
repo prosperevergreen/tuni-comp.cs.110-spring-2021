@@ -55,7 +55,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEditFileName"/>
+         <widget class="QLineEdit" name="fileLineEdit"/>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -71,7 +71,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonFind">
+         <widget class="QPushButton" name="findPushButton">
           <property name="text">
            <string>Find</string>
           </property>
@@ -89,7 +89,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEditSearchTerm"/>
+         <widget class="QLineEdit" name="keyLineEdit"/>
         </item>
         <item>
          <spacer name="horizontalSpacer_2">
@@ -105,7 +105,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonClose">
+         <widget class="QPushButton" name="closePushButton">
           <property name="text">
            <string>Close</string>
           </property>
@@ -114,7 +114,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxMatchCap">
+       <widget class="QCheckBox" name="matchCheckBox">
         <property name="text">
          <string>Match case</string>
         </property>
@@ -135,7 +135,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="textBrowserResult"/>
+       <widget class="QTextBrowser" name="textBrowser"/>
       </item>
      </layout>
     </item>
@@ -156,7 +156,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButtonClose</sender>
+   <sender>closePushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>

@@ -21,7 +21,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButtonFind_clicked();
+    void findPushButton();
 
 private:
     Ui::MainWindow *ui;
