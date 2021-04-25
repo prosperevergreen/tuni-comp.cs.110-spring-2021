@@ -28,7 +28,7 @@ void MainWindow::findPushButton()
 
     // Search for file
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+    if (fileName.isEmpty() || !file.open(QIODevice::ReadOnly | QIODevice::Text)){
          ui->textBrowser->setText(NO_FILE);
          return;
     }
