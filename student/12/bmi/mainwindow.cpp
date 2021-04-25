@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->countButton, &QPushButton::clicked, this, &MainWindow::calcBMI);
+    connect(ui->weightLineEdit, &QLineEdit::editingFinished, this, &MainWindow::calcBMI);
+    connect(ui->weightLineEdit, &QLineEdit::textChanged, this, &MainWindow::calcBMI);
+    connect(ui->heightLineEdit, &QLineEdit::editingFinished, this, &MainWindow::calcBMI);
+    connect(ui->heightLineEdit, &QLineEdit::textChanged, this, &MainWindow::calcBMI);
 }
 
 MainWindow::~MainWindow()
@@ -25,7 +29,7 @@ void MainWindow::calcBMI(){
     QRegExp re("\\d*");
 
     // Check if values are invalid
-    if(!re.exactMatch(weightText) || !re.exactMatch(heightText))
+    if(weightText.isEmpty() || heightText.isEmpty() || !re.exactMatch(weightText) || !re.exactMatch(heightText))
         return;
 
     // Try conversion of QString to int
