@@ -9,10 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->countButton, &QPushButton::clicked, this, &MainWindow::calcBMI);
-    connect(ui->weightLineEdit, &QLineEdit::editingFinished, this, &MainWindow::calcBMI);
-    connect(ui->weightLineEdit, &QLineEdit::textChanged, this, &MainWindow::calcBMI);
-    connect(ui->heightLineEdit, &QLineEdit::editingFinished, this, &MainWindow::calcBMI);
-    connect(ui->heightLineEdit, &QLineEdit::textChanged, this, &MainWindow::calcBMI);
 }
 
 MainWindow::~MainWindow()
@@ -48,7 +44,7 @@ void MainWindow::calcBMI(){
     ui->resultLabel->setText(QString::number(bmi));
 
     // Optionally display BMI class
-    if(bmi < 15){
+    if(bmi < 18.5){
         ui->infoTextBrowser->setText(UNDER_WEIGHT);
         return;
     }
